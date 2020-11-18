@@ -1,14 +1,22 @@
-let numberOfFilms = +prompt('How many films do you whached?', "");
+let numberOfFilms;
+
+function start() {
+    numberOfFilms = +prompt('How many films do you whached?', "");
+
+    while (numberOfFilms == '' || numberOfFilms == null || isNaN(numberOfFilms)) {
+        numberOfFilms = +prompt('How many films do you whached?', "");
+    }
+}
+
+start();
 
 const personalMovieDB = {
     count: numberOfFilms,
     movies: {},
     actors: {},
-    genders: [],
-    privat: false,
-};
-
-
+    genres: [],
+    privat: true,
+}; 
 
 if (personalMovieDB.count >= 20 && personalMovieDB.count < 30) {
     alert("Filmwatcher");
@@ -17,51 +25,37 @@ if (personalMovieDB.count >= 20 && personalMovieDB.count < 30) {
 } else {
     alert("Error");
 }
+ 
 
-let countQuestion = 0;
-for( let i=0; i < 2; i++) {
-
-    let a = prompt('Which last of the film did you watch?', ""),
-        b = prompt('Please, write rating of this film', "");
-    if ( a === "") {
-        alert("Non empty, try again");
-    } else if ( a == null) { 
-        i--;
-    } else { 
-        personalMovieDB.movies[a] = b;
+function detectPersonalLevel() { 
+    if ( personalMovieDB.count < 10) {
+        console.log("Watched not a lot of films");
+    } else if ( personalMovieDB.count >=10 && personalMovieDB.count< 30) { 
+        console.log("You are classical watcher");
+    } else if (personalMovieDB.count >=30) { 
+        console.log("You are filmwatcher");
+    } else {
+        console.log("Something went wrong!");
     }
 }
-// while (countQuestion <1) {
-//     let a = prompt('Which last of the film did you watch?', ""),
-//         b = prompt('Please, write rating of this film', "");
 
-//     // switch (a) {
-//     //     case "": 
-//     //         alert("Non empty, try again");
-//     //         break;
-//     //     case a.length > 12 || a == null :  
-//     //         while (countQuestion <2) {
-//     //             alert(a); 
-//     //             alert(b); 
-//     //             personalMovieDB.movies[a] = b; 
-//     //             countQuestion ++;
-//     //         }
-//     //         break;
-//     // }
+detectPersonalLevel();
 
-//     if ( a === "") {
-//         alert("Non empty, try again");
-//     } else if ( a == null) { 
-//         a = prompt('Which last of the film did you watch?', "");
-//         b = prompt('Please, write rating of this film', ""); 
-//     } else { 
-//         personalMovieDB.movies[a] = b; 
-//         countQuestion ++;
-//     }
-// }
+//console.log(personalMovieDB); 
 
+function showMyDB(hidden) {
+    if (!hidden) {
+        console.log(personalMovieDB);
+    } 
+} 
 
+showMyDB(personalMovieDB.privat);
 
-console.log(personalMovieDB.movies);
-
+function writeYourGenres() { 
+    for (let i = 1; i <= 3; i++) { 
+        personalMovieDB.genres[i - 1] = prompt(`Your favourite genre on the number ${i}`);
+    }
  
+    
+}
+writeYourGenres();
