@@ -18,91 +18,108 @@ P.S. Здесь есть несколько вариантов решения з
 */
 
 'use strict';
-
-// Возьмите свой код из предыдущей практики 
-
-const movieDB = {
-    movies: [
-        "Логан",
-        "Лига справедливости",
-        "Ла-ла лэнд",
-        "Одержимость",
-        "Скотт Пилигрим против..."
-    ]
-};
-
-const promoAdv = document.querySelectorAll('.promo__adv img'), 
-      poster = document.querySelector('.promo__bg'),
-      ganre = poster.querySelector('.promo__genre'),
-      moviesList = document.querySelector('.promo__interactive-list'),
-      movies = movieDB.movies,
-      formAdd = document.querySelector('.add'),
-      formButton = formAdd.querySelector('button'),
-      formInput = formAdd.querySelector('.adding__input'),
-      checkbox = formAdd.querySelector('[type="checkbox"]');
  
-promoAdv.forEach(element => {
-    element.remove();
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const movieDB = {
+        movies: [
+            "Логан",
+            "Лига справедливости",
+            "Ла-ла лэнд",
+            "Одержимость",
+            "Скотт Пилигрим против..."
+        ]
+    };
+    
+    const promoAdv = document.querySelectorAll('.promo__adv img'), 
+          poster = document.querySelector('.promo__bg'),
+          ganre = poster.querySelector('.promo__genre'),
+          moviesList = document.querySelector('.promo__interactive-list'),
+          movies = movieDB.movies,
+          formAdd = document.querySelector('.add'),
+          formButton = formAdd.querySelector('button'),
+          formInput = formAdd.querySelector('.adding__input'),
+          checkbox = formAdd.querySelector('[type="checkbox"]');
 
-poster.style.backgroundImage = 'url("img/bg.jpg")';
 
-ganre.textContent = "драма"; 
+             
+    const formValueResult = (e) => {
+        e.preventDefault();
 
-let deleteMovie = function()  {
-    console.log('delete');
-};
- 
-let setDeleteBtnsListener = () => {
-    const deleteBtns = document.querySelectorAll('.delete');
+        let newFilm = String(formInput.value);
+        const favourite = checkbox.checked;
+    
+        if (newFilm) {
+            if (newFilm.length > 5) {
+                newFilm = `${newFilm.substring(0, 3)}...`;
+            }
 
-    deleteBtns.forEach(deleteBtn => {
-        deleteBtn.addEventListener('click', deleteMovie);
-        console.log(deleteBtn);
-    }); 
-};
+            if (favourite) {
+                console.log("Add favourite film");
+            }
 
-let addMovie = function() { 
-    let resultMovie = '';
+            movies.push(newFilm.toUpperCase());
+            sortArr(movieDB.movies);  
+            createMovieList(movieDB.movies, moviesList);
+        } 
+        
+        //e.target.reset();
+    }; 
 
-    moviesList.innerHTML = ""; 
-    movies.sort();
+    const deleteAdv = (arr) => { 
+        arr.forEach(element => {
+            element.remove();
+        });
+    };
 
-    movies.forEach((item, i) => { 
-        if (item.length > 5 ) {
-            resultMovie += `<li class="promo__interactive-item">${i+1}. ${item.slice(0, 5)}... <div class=\"delete\"></div></li>`; 
-        } else { 
-            resultMovie += `<li class="promo__interactive-item">${i+1}. ${item} <div class=\"delete\"></div></li>`; 
-        }
-    }); 
+    const makeChanges = () => {
+        poster.style.backgroundImage = 'url("img/bg.jpg")';
+        
+        ganre.textContent = "драма"; 
+    };
 
-    moviesList.insertAdjacentHTML("afterbegin", resultMovie);
-    setDeleteBtnsListener();
-};
- 
-addMovie();
+    const sortArr = (arr) => {
+        arr.sort();
+    }; 
+     
+    let deleteBtnsListener = () => {
+        const deleteBtns = document.querySelectorAll('.delete');
+    
+        deleteBtns.forEach((deleteBtn, i) => {
+            deleteBtn.addEventListener('click', () => {
+                deleteBtn.parentElement.remove();
+                movieDB.movies.splice(i, 1);
 
-const formValueResult = (e) => {
-    let resultValue = String(formInput.value);
-    e.preventDefault();
+                createMovieList(movieDB.movies, moviesList);
+            });
+        }); 
+    };
+    
+     function createMovieList(films, parent) {      
+        parent.innerHTML = "";  
+        sortArr(films);
+        
+        films.forEach((item, i) => { 
+            parent.innerHTML += `
+                <li class="promo__interactive-item">${i+1}. ${item} 
+                    <div class=\"delete\"></div>
+                </li>
+            `; 
+        });  
 
-    if (resultValue != "") {
-        movies.push(resultValue.toUpperCase()); 
-        addMovie();
+        deleteBtnsListener();
     } 
-};  
-
-formButton.addEventListener('click', formValueResult);
-
-let checkboxProperty = (e) => {
-    console.log(e.target);
-    console.log(e.type);
-    console.log(checkbox.value);
-    if (checkbox.checked == true){
-        console.log("To do the favourite");
-      } else {
-        console.log("Delete from the favouretes");
-      }
-};
-
-checkbox.addEventListener('click', checkboxProperty);
+    
+    let checkboxProperty = (e) => {
+        if (checkbox.checked == true){
+            console.log("To do the favourite");
+          } else {
+            console.log("Delete from the favouretes");
+          }
+    };
+    
+    deleteAdv(promoAdv);
+    makeChanges();
+    checkbox.addEventListener('click', checkboxProperty);
+    formButton.addEventListener('click', formValueResult);
+    createMovieList(movieDB.movies, moviesList);
+});
