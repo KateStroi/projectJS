@@ -131,50 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
   disableTab();
-  enableTab(); // Timer
-  // const deadLine = '2020-03-17';
-  // function getTimeRemaining(endtime) {
-  //     const t = Date.parse(endtime) - Date.parse(new Date()),
-  //     days = Math.floor( (t/(1000*60*60*24)) ),
-  //     seconds = Math.floor( (t/1000) % 60 ),
-  //     minutes = Math.floor( (t/1000/60) % 60 ),
-  //     hours = Math.floor( (t/(1000*60*60) % 24) );
-  //     return {
-  //         'total': t,
-  //         'days': days,
-  //         'hours': hours,
-  //         'minutes': minutes,
-  //         'seconds': seconds
-  //     };
-  // }
-  // function getZero(num){
-  //     if (num >= 0 && num < 10) { 
-  //         return '0' + num;
-  //     } else {
-  //         return num;
-  //     }
-  // }
-  // function setTimerInterval(selector, endtime) {
-  //     const timer = document.querySelector(selector),
-  //         days = timer.querySelector('#days'),
-  //         hours = timer.querySelector('#hours'),
-  //         minutes = timer.querySelector('#minutes'),
-  //         seconds = timer.querySelector('#seconds'),
-  //         timerInterval = setInterval(updateTimer, 1000);
-  //         updateTimer(); 
-  //         function updateTimer() {
-  //             const t = getTimeRemaining(endtime);
-  //             days.textContent = getZero(t.days);
-  //             hours.textContent = getZero(t.hours);
-  //             minutes.textContent = getZero(t.minutes);
-  //             seconds.textContent = getZero(t.seconds); 
-  //             if (t.total <= 0) {
-  //                 clearInterval(timerInterval);
-  //             }
-  //         }
-  // }
-  // setTimerInterval('.timer', deadLine);
-  // console.log(new Date() );
+  enableTab(); // Timer 
 
   const deadline = '2021-03-10';
 
@@ -231,7 +188,34 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  setClock('.timer', deadline);
+  setClock('.timer', deadline); // Modal 
+
+  const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modalWindow = document.querySelector('.modal'),
+        modalBtnClose = modalWindow.querySelector('[data-close]');
+
+  function closeModal() {
+    modalWindow.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  modalTrigger.forEach(item => {
+    item.addEventListener('click', e => {
+      modalWindow.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  modalBtnClose.addEventListener('click', closeModal);
+  modalWindow.addEventListener('click', e => {
+    if (e.target === modalWindow) {
+      closeModal();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Escape' && modalWindow.classList.contains('show')) {
+      closeModal();
+    }
+  });
 });
 
 /***/ })
