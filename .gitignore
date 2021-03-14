@@ -1,5 +1,6 @@
 #dependencies
-/node_modules
+/BasisJS/node_modules
+/Food/node_modules
 
 #production
-/build
+/Food/dist
