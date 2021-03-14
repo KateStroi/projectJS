@@ -230,12 +230,13 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', showModalByScroll); // Dynamic menu card
 
   class MenuCard {
-    constructor(imgSrc, alt, title, desk, prise, parentSelector) {
+    constructor(imgSrc, alt, title, desk, prise, parentSelector, ...classes) {
       this.imgSrc = imgSrc;
       this.alt = alt;
       this.title = title;
       this.desk = desk;
       this.prise = prise;
+      this.classes = classes;
       this.parent = document.querySelector(parentSelector);
       this.transfer = 27;
       this.changeToUAH();
@@ -247,25 +248,31 @@ window.addEventListener('DOMContentLoaded', () => {
 
     render() {
       const element = document.createElement('div');
-      element.innerHTML = ` 
-                <div class="menu__item">
-                    <img src=${this.imgSrc} alt=${this.alt}>
-                    <h3 class="menu__item-subtitle">Menu "${this.title}"</h3>
-                    <div class="menu__item-descr">${this.desk}</div>
-                    <div class="menu__item-divider"></div>
-                    <div class="menu__item-price">
-                        <div class="menu__item-cost">Price:</div>
-                        <div class="menu__item-total"><span>${this.prise}</span> UAH/day</div>
-                    </div>
-                </div>
+
+      if (this.classes.length === 0) {
+        this.element = 'menu__item';
+        element.classList.add(this.element);
+      } else {
+        this.classes.forEach(className => element.classList.add(className));
+      }
+
+      element.innerHTML = `  
+                <img src=${this.imgSrc} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">Menu "${this.title}"</h3>
+                <div class="menu__item-descr">${this.desk}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Price:</div>
+                    <div class="menu__item-total"><span>${this.prise}</span> UAH/day</div>
+                </div> 
             `;
       this.parent.append(element);
     }
 
   }
 
-  new MenuCard("img/tabs/vegy.jpg", "vegy", "The One", "The \"One\" - is the best menu you have ever seen!", "9", ".menu .container").render();
-  new MenuCard("img/tabs/elite.jpg", "elite", "The Second", "The \"Second\" - is the best menu you have ever seen!", "9", ".menu .container").render();
+  new MenuCard("img/tabs/vegy.jpg", "vegy", "The One", "The \"One\" - is the best menu you have ever seen!", "9", ".menu .container", "menu__item").render();
+  new MenuCard("img/tabs/elite.jpg", "elite", "The Second", "The \"Second\" - is the best menu you have ever seen!", "9", ".menu .container", "menu__item").render();
   new MenuCard("img/tabs/post.jpg", "post", "The Third", "The \"Third\" - is the best menu you have ever seen!", "9", ".menu .container").render();
 });
 
