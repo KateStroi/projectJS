@@ -1,15 +1,19 @@
 # ProjectJS
- 
-This repository has a few simple project where I train my JS skills.
 
-### BasisJS folder
+This repository contains a few simple projects where I train my JS skills.
 
-It contains basic JS code.
+## BasisJS
 
-### Food folder
+This project contains examples of basic usage of JavaScript
 
-It's about JS in use on the simple site.
+## Food
 
-### AJAX
+This project is a simple example of a real web-site where JavaScript is used
 
-In this folder I am going to work with an advanced JS.
+## AJAX
+
+In this folder I am going to work with an advanced JS
+
+## Usage
+
+The entry point to each of these project is index.html inside the folder
