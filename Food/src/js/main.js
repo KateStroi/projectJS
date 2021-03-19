@@ -104,8 +104,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Modal 
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-    modalWindow = document.querySelector('.modal'),
-    modalBtnClose = modalWindow.querySelector('[data-close]'); 
+    modalWindow = document.querySelector('.modal');
 
     function openModal() {
         modalWindow.classList.add('show');
@@ -123,10 +122,8 @@ window.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', openModal);
     });
 
-    modalBtnClose.addEventListener('click', closeModal );
-
     modalWindow.addEventListener('click', (e) => { 
-        if (e.target === modalWindow) { 
+        if (e.target === modalWindow || e.target.getAttribute('data-close') == '') { 
             closeModal();
         }
     });
@@ -137,7 +134,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // const modalTimer = setInterval(openModal, 5000);
+    const modalTimer = setInterval(openModal, 50000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -195,7 +192,7 @@ window.addEventListener('DOMContentLoaded', () => {
      
 
     new MenuCard(
-        "img/tabs/vegy.jpg",
+        "src/img/tabs/vegy.jpg",
         "vegy", 
         "The One", 
         "The \"One\" - is the best menu you have ever seen!", 
@@ -205,7 +202,7 @@ window.addEventListener('DOMContentLoaded', () => {
     ).render();
 
     new MenuCard(
-        "img/tabs/elite.jpg",
+        "src/img/tabs/elite.jpg",
         "elite", 
         "The Second", 
         "The \"Second\" - is the best menu you have ever seen!", 
@@ -215,12 +212,94 @@ window.addEventListener('DOMContentLoaded', () => {
     ).render();
 
     new MenuCard(
-        "img/tabs/post.jpg",
+        "src/img/tabs/post.jpg",
         "post", 
         "The Third", 
         "The \"Third\" - is the best menu you have ever seen!", 
         "9",
         ".menu .container", 
     ).render();
- 
+        
+    // Forms
+
+    const forms = document.querySelectorAll('form');
+    const message = {
+        loading: "src/img/form/spinner.svg",
+        success: "Thanks!",
+        failure: "Something went wrong.."
+    };
+
+    forms.forEach (item => {
+        postData(item);
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            let statusMessage = document.createElement("img");
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            statusMessage.textContent = message.loading;
+            form.appendChild(statusMessage);
+            form.insertAdjacentElement('afterend', statusMessage);
+            
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+
+            request.setRequestHeader('Content-type', 'applicatio/json');
+            const formData = new FormData(form);
+
+            const object = {};
+            formData.forEach (function(value, key) {
+               object[key] = value;                 
+            });
+
+            const json = JSON.stringify(object);
+
+            request.send(json); 
+
+            request.addEventListener('load', ()=> {
+                if (request.status === 200) {
+                    console.log(request.response);
+                    showThanksModal(message.success);
+                    form.reset();
+                    setTimeout (() => {
+                        statusMessage.remove();
+                    }, 2000);
+                } else {
+                    showThanksModal(message.failure);
+                }
+            });
+        });
+    }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+        
+        prevModalDialog.classList.add('hide');
+        openModal();
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML =`
+            <div class="modal__content">
+                <div class="modal__close" data-close>x</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+        
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000);
+    }
 });
