@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
     // Tabs
@@ -189,110 +189,92 @@ window.addEventListener('DOMContentLoaded', () => {
             this.parent.append(element);
         }
     }
-     
-
-    new MenuCard(
-        "src/img/tabs/vegy.jpg",
-        "vegy", 
-        "The One", 
-        "The \"One\" - is the best menu you have ever seen!", 
-        "9",
-        ".menu .container",
-        "menu__item"
-    ).render();
-
-    new MenuCard(
-        "src/img/tabs/elite.jpg",
-        "elite", 
-        "The Second", 
-        "The \"Second\" - is the best menu you have ever seen!", 
-        "9",
-        ".menu .container",
-        "menu__item"
-    ).render();
-
-    new MenuCard(
-        "src/img/tabs/post.jpg",
-        "post", 
-        "The Third", 
-        "The \"Third\" - is the best menu you have ever seen!", 
-        "9",
-        ".menu .container", 
-    ).render();
+     getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        }); 
         
     // Forms
 
     const forms = document.querySelectorAll('form');
     const message = {
-        loading: "src/img/form/spinner.svg",
-        success: "Thanks!",
-        failure: "Something went wrong.."
+        loading: 'src/img/form/spinner.svg',
+        success: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
     };
 
-    forms.forEach (item => {
-        postData(item);
+    forms.forEach(item => {
+        bindPostData(item);
     });
 
-    function postData(form) {
+    const postData = async (url, data) => {
+        let res = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
+        });
+    
+        return await res.json();
+    };
+
+    async function getResource(url) {
+        let res = await fetch(url);
+    
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+    
+        return await res.json();
+    }
+
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            let statusMessage = document.createElement("img");
+            let statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
             statusMessage.style.cssText = `
                 display: block;
                 margin: 0 auto;
             `;
-            statusMessage.textContent = message.loading;
-            form.appendChild(statusMessage);
             form.insertAdjacentElement('afterend', statusMessage);
- 
+        
             const formData = new FormData(form);
 
-            const object = {};
-            formData.forEach (function(value, key) {
-               object[key] = value;                 
-            });
-       
-            fetch('server.php', { 
-                method: "POST",
-                headers: {
-                    'Content-type': 'applicatio/json'
-                },
-                body: JSON.stringify(object)
-            })
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                 console.log(data);
                 showThanksModal(message.success);
                 statusMessage.remove();
-            })
-            .then(data => data.text())
-            .then(() => {
-                form.reset();
-            })
-            .catch(() => {
+            }).catch(() => {
                 showThanksModal(message.failure);
-            }); 
+            }).finally(() => {
+                form.reset();
+            });
         });
     }
 
     function showThanksModal(message) {
         const prevModalDialog = document.querySelector('.modal__dialog');
-        
+
         prevModalDialog.classList.add('hide');
         openModal();
 
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
-        thanksModal.innerHTML =`
+        thanksModal.innerHTML = `
             <div class="modal__content">
-                <div class="modal__close" data-close>x</div>
+                <div class="modal__close" data-close>×</div>
                 <div class="modal__title">${message}</div>
             </div>
         `;
-
         document.querySelector('.modal').append(thanksModal);
-        
         setTimeout(() => {
             thanksModal.remove();
             prevModalDialog.classList.add('show');

@@ -1,0 +1,27 @@
+{
+  "menu": [
+    {
+      "img": "src/img/tabs/vegy.jpg",
+      "altimg": "vegy",
+      "title": "The One",
+      "descr": "The 'One' - is the best menu you have ever seen!",
+      "price": 9
+    },
+    {
+      "img": "src/img/tabs/post.jpg",
+      "altimg": "post",
+      "title": "The Second",
+      "descr": "The 'Second' - is the best menu you have ever seen!",
+      "price": 14
+    },
+    {
+      "img": "src/img/tabs/elite.jpg",
+      "altimg": "elite",
+      "title": "The Third",
+      "descr": "The 'Third' - is the best menu you have ever seen!",
+      "price": 21
+    }
+  ],
+  "requests": [ 
+  ]
+}
