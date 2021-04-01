@@ -1,4 +1,4 @@
-// 'use strict';
+//'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
     // Tabs
@@ -282,4 +282,65 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 4000);
     }
+
+    //Slider
+    const offerSlider = document.querySelector('.offer__slider'),
+          offerSlide = offerSlider.querySelectorAll('.offer__slide'), 
+          current = offerSlider.querySelector('#current'), 
+          btnNext = offerSlider.querySelector('.offer__slider-next'),
+          btnPrev = offerSlider.querySelector('.offer__slider-prev');
+    let offerSlideIndex = 1; 
+
+    function addZero(figures) {
+        if (figures > 0 && figures < 10) {
+            return '0' + figures;
+        } else { return figures; }
+    }
+
+    function insertTotal(selector, where) {  
+        const total = offerSlider.querySelector(where);
+        const selectorTotal = selector.length; 
+        total.textContent = addZero(selectorTotal);
+        return selectorTotal;
+    } 
+
+    function insertCurrent(index) {
+        current.textContent = addZero(index);
+    } 
+
+    const totalSlide = insertTotal(offerSlide, '#total');    
+    setActiveSlide();
+
+    function setActiveSlide() {
+        insertCurrent(offerSlideIndex);
+              
+        if (offerSlideIndex > totalSlide) { 
+            insertCurrent(offerSlideIndex = 1);  
+        } else if (offerSlideIndex < 1) {
+            insertCurrent(offerSlideIndex = totalSlide);
+        } 
+        
+        offerSlide.forEach((item, index) => {  
+            index = index + 1;
+            item.classList.add('hide');
+
+            if (index == offerSlideIndex) {
+                item.classList.add('show');  
+                item.classList.remove('hide');    
+            } else {
+                item.classList.add('hide');
+                item.classList.remove('show');
+            }
+        });
+    }
+    
+    btnNext.addEventListener('click', () => {  
+        insertCurrent(++offerSlideIndex);  
+        setActiveSlide();
+    });  
+
+    btnPrev.addEventListener('click', () => { 
+        insertCurrent(--offerSlideIndex);   
+        setActiveSlide();
+    });
 });
