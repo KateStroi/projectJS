@@ -390,6 +390,9 @@ window.addEventListener('DOMContentLoaded', () => {
             current.textContent =  offerSlideIndex;
         }
     }
+    function deleteNotDigits(str) {
+        return +str.replace(/\D/g, '');
+    }
 
     indicators.classList.add('carousel-indicators');
 
@@ -436,10 +439,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     btnNext.addEventListener('click',() => {
-        if (offset == +width.slice(0, width.length - 2) * (offerSlides.length - 1)) {
+        if (offset == deleteNotDigits(width) * (offerSlides.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += deleteNotDigits(width);
         }
         
         offerSlidesField.style.transform = `translateX(-${offset}px)`;
@@ -456,9 +459,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     btnPrev.addEventListener('click',() => {
         if (offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (offerSlides.length - 1);
+            offset = deleteNotDigits(width) * (offerSlides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= deleteNotDigits(width);
         }
         
         offerSlidesField.style.transform = `translateX(-${offset}px)`;
@@ -478,7 +481,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const slideTo = e.target.getAttribute('data-slide-to');
 
             offerSlideIndex = slideTo;
-            offset = offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            offset = offset = deleteNotDigits(width) * (slideTo - 1);
             offerSlidesField.style.transform = `translateX(-${offset}px)`;
 
             addZero();            
