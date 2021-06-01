@@ -1,3 +1,5 @@
+import {getResource} from '../services/services';
+
 function cards() {
     // Dynamic menu card
 
@@ -48,16 +50,6 @@ function cards() {
         data.forEach(({img, altimg, title, descr, price}) => {
             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
         });
-    }); 
-
-    async function getResource(url) {
-        let res = await fetch(url);
-    
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-    
-        return await res.json();
-    }
+    });
 }
-module.exports = cards;
+export default cards;

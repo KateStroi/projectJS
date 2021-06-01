@@ -113,4 +113,4 @@ function  calculator() {
     getDynamicInfo('#weight'); 
 }
 
-module.exports = calculator;
+export default calculator;

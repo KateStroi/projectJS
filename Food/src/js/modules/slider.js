@@ -1,18 +1,18 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
     
 
     //Sliders
-    const offerSlider = document.querySelector('.offer__slider'),
-          offerSlides = offerSlider.querySelectorAll('.offer__slide'), 
-          offerSliderWrapper = document.querySelector('.offer__slider-wrapper'),
-          offerSlidesField = document.querySelector('.offer__slider-inner'),
-          width = window.getComputedStyle(offerSliderWrapper).width,
-          current = offerSlider.querySelector('#current'), 
-          total = offerSlider.querySelector('#total'), 
-          btnNext = offerSlider.querySelector('.offer__slider-next'),
-          btnPrev = offerSlider.querySelector('.offer__slider-prev');
+    const slider = document.querySelector(container),
+          slides = slider.querySelectorAll(slide), 
+          sliderWrapper = document.querySelector(wrapper),
+          slidesField = document.querySelector(field),
+          width = window.getComputedStyle(sliderWrapper).width,
+          current = slider.querySelector(currentCounter), 
+          total = slider.querySelector(totalCounter), 
+          btnNext = slider.querySelector(nextArrow),
+          btnPrev = slider.querySelector(prevArrow);
 
-    let offerSlideIndex = 1; 
+    let slideIndex = 1; 
     let offset = 0;
     
     //type 1
@@ -24,7 +24,7 @@ function slider() {
     // }
 
     // function insertTotal(selector, where) {  
-    //     const total = offerSlider.querySelector(where);
+    //     const total = slider.querySelector(where);
     //     const selectorTotal = selector.length; 
     //     total.textContent = addZero(selectorTotal);
     //     return selectorTotal;
@@ -34,23 +34,23 @@ function slider() {
     //     current.textContent = addZero(index);
     // } 
 
-    // const totalSlide = insertTotal(offerSlides, '#total');    
+    // const totalSlide = insertTotal(slides, '#total');    
     // setActiveSlide();
 
     // function setActiveSlide() {
-    //     insertCurrent(offerSlideIndex);
+    //     insertCurrent(slideIndex);
               
-    //     if (offerSlideIndex > totalSlide) { 
-    //         insertCurrent(offerSlideIndex = 1);  
-    //     } else if (offerSlideIndex < 1) {
-    //         insertCurrent(offerSlideIndex = totalSlide);
+    //     if (slideIndex > totalSlide) { 
+    //         insertCurrent(slideIndex = 1);  
+    //     } else if (slideIndex < 1) {
+    //         insertCurrent(slideIndex = totalSlide);
     //     } 
         
-    //     offerSlide.forEach((item, index) => {  
+    //     slide.forEach((item, index) => {  
     //         index = index + 1;
     //         item.classList.add('hide');
 
-    //         if (index == offerSlideIndex) {
+    //         if (index == slideIndex) {
     //             item.classList.add('show');  
     //             item.classList.remove('hide');    
     //         } else {
@@ -61,51 +61,51 @@ function slider() {
     // }
     
     // btnNext.addEventListener('click', () => {  
-    //     insertCurrent(++offerSlideIndex);  
+    //     insertCurrent(++slideIndex);  
     //     setActiveSlide();
     // });  
 
     // btnPrev.addEventListener('click', () => { 
-    //     insertCurrent(--offerSlideIndex);   
+    //     insertCurrent(--slideIndex);   
     //     setActiveSlide();
     // });
 
     //type 2
 
-    if (offerSlides.length < 10) {
-        total.textContent = `0${offerSlides.length}`;
-        current.textContent = `0${offerSlideIndex}`;
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
     } else {
-        total.textContent = offerSlides.length;
-        current.textContent = offerSlideIndex;
+        total.textContent = slides.length;
+        current.textContent = slideIndex;
     }
 
-    offerSlidesField.style.width = 100 * offerSlides.length + '%';
-    offerSlidesField.style.display = 'flex';
-    offerSlidesField.style.transition = '0.5s all';
+    slidesField.style.width = 100 * slides.length + '%';
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
 
-    offerSliderWrapper.style.overflow = 'hidden';
+    sliderWrapper.style.overflow = 'hidden';
 
 
-    offerSlides.forEach(slide => {
+    slides.forEach(slide => {
         slide.style.width = width;
     });
 
-    offerSlider.style.position = 'relative';
+    slider.style.position = 'relative';
 
     const indicators = document.createElement('ol'),
           dots = [];
 
     function setActiveDot() { 
         dots.forEach(dot => dot.style.opacity = '.5');
-        dots[offerSlideIndex - 1].style.opacity = 1;
+        dots[slideIndex - 1].style.opacity = 1;
     }
 
     function addZero() {
-        if(offerSlides.length < 10) {
-            current.textContent = `0${offerSlideIndex}`;
+        if(slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
         } else {
-            current.textContent =  offerSlideIndex;
+            current.textContent =  slideIndex;
         }
     }
     function deleteNotDigits(str) {
@@ -127,9 +127,9 @@ function slider() {
         list-style: none;
     `;
 
-    offerSlider.append(indicators);
+    slider.append(indicators);
     
-    for(let i=0; i < offerSlides.length; i++) {
+    for(let i=0; i < slides.length; i++) {
         const dot = document.createElement('li');
         dot.setAttribute('data-slide-to', i + 1);
         dot.style.cssText = `
@@ -157,18 +157,18 @@ function slider() {
     }
 
     btnNext.addEventListener('click',() => {
-        if (offset == deleteNotDigits(width) * (offerSlides.length - 1)) {
+        if (offset == deleteNotDigits(width) * (slides.length - 1)) {
             offset = 0;
         } else {
             offset += deleteNotDigits(width);
         }
         
-        offerSlidesField.style.transform = `translateX(-${offset}px)`;
+        slidesField.style.transform = `translateX(-${offset}px)`;
 
-        if (offerSlideIndex == offerSlides.length) {
-            offerSlideIndex = 1;
+        if (slideIndex == slides.length) {
+            slideIndex = 1;
         } else {
-            offerSlideIndex++;
+            slideIndex++;
         }
 
         addZero();
@@ -177,17 +177,17 @@ function slider() {
 
     btnPrev.addEventListener('click',() => {
         if (offset == 0) {
-            offset = deleteNotDigits(width) * (offerSlides.length - 1);
+            offset = deleteNotDigits(width) * (slides.length - 1);
         } else {
             offset -= deleteNotDigits(width);
         }
         
-        offerSlidesField.style.transform = `translateX(-${offset}px)`;
+        slidesField.style.transform = `translateX(-${offset}px)`;
 
-        if (offerSlideIndex == 1) {
-            offerSlideIndex = offerSlides.length;
+        if (slideIndex == 1) {
+            slideIndex = slides.length;
         } else {
-            offerSlideIndex--;
+            slideIndex--;
         }
 
         addZero();
@@ -198,9 +198,9 @@ function slider() {
         dot.addEventListener('click', (e) => {
             const slideTo = e.target.getAttribute('data-slide-to');
 
-            offerSlideIndex = slideTo;
+            slideIndex = slideTo;
             offset = offset = deleteNotDigits(width) * (slideTo - 1);
-            offerSlidesField.style.transform = `translateX(-${offset}px)`;
+            slidesField.style.transform = `translateX(-${offset}px)`;
 
             addZero();            
             setActiveDot();
@@ -208,4 +208,4 @@ function slider() {
     });
 }
 
-module.exports = slider;
+export default slider;
